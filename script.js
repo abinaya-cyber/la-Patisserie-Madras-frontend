@@ -271,6 +271,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 5000);
         });
 
+        // Touch swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        track.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            clearInterval(autoSlide);
+        }, { passive: true });
+
+        track.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 40) {
+                if (diff > 0) goToSlide(currentSlide + 1);
+                else goToSlide(currentSlide - 1);
+            }
+        }, { passive: true });
+
         updateSlidesPerView();
         createDots();
 
@@ -345,18 +362,126 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: true });
 
-    // ---------- Gallery Click Effect ----------
+    // ---------- Scroll Reading Progress & Back-to-Top ----------
+    const scrollProgress = document.getElementById('scrollProgress');
+    const backToTopBtn = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalHeight > 0 && scrollProgress) {
+            const progress = (window.scrollY / totalHeight) * 100;
+            scrollProgress.style.width = `${progress}%`;
+        }
+        if (backToTopBtn) {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }
+    }, { passive: true });
+
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ---------- Product Card "Order →" Quick Action ----------
+    document.querySelectorAll('.specialty-card .card-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const card = btn.closest('.specialty-card');
+            const title = card ? card.querySelector('.card-title')?.textContent?.trim() : '';
+            const category = card ? card.querySelector('.card-category')?.textContent?.trim().toLowerCase() : '';
+            const price = card ? card.querySelector('.card-price')?.textContent?.trim() : '';
+
+            const orderTypeSelect = document.getElementById('orderType');
+            if (orderTypeSelect && category) {
+                if (category.includes('wedding')) orderTypeSelect.value = 'wedding';
+                else if (category.includes('cake')) orderTypeSelect.value = 'birthday';
+                else if (category.includes('macaron')) orderTypeSelect.value = 'macarons';
+                else if (category.includes('pastr')) orderTypeSelect.value = 'pastries';
+                else orderTypeSelect.value = 'custom';
+            }
+
+            const messageEl = document.getElementById('message');
+            if (messageEl && title) {
+                messageEl.value = `Hi, I would like to order the ${title} (${price}). Please let me know the availability!`;
+                messageEl.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            const contactSection = document.getElementById('contact');
+            const formWrapper = document.querySelector('.contact-form-wrapper');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+                if (formWrapper) {
+                    formWrapper.classList.remove('form-highlight');
+                    void formWrapper.offsetWidth;
+                    formWrapper.classList.add('form-highlight');
+                }
+                const nameInput = document.getElementById('name');
+                if (nameInput) setTimeout(() => nameInput.focus(), 600);
+            }
+        });
+    });
+
+    // ---------- Direct WhatsApp Order Action ----------
+    const orderViaWhatsappBtn = document.getElementById('orderViaWhatsapp');
+    if (orderViaWhatsappBtn) {
+        orderViaWhatsappBtn.addEventListener('click', () => {
+            const name = document.getElementById('name')?.value.trim() || 'A Customer';
+            const orderType = document.getElementById('orderType')?.value || 'Inquiry';
+            const message = document.getElementById('message')?.value.trim() || 'I would like to inquire about your pastries.';
+
+            const text = encodeURIComponent(
+                `*New Order Inquiry — La Patisserie Madras*\n` +
+                `👤 *Name:* ${name}\n` +
+                `🎂 *Type:* ${orderType}\n` +
+                `📝 *Details:* ${message}`
+            );
+            window.open(`https://wa.me/919884882516?text=${text}`, '_blank');
+        });
+    }
+
+    // ---------- Luxury Gallery Lightbox ----------
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    function openLightbox(imgSrc, captionText) {
+        if (!lightbox || !lightboxImg) return;
+        lightboxImg.src = imgSrc;
+        lightboxCaption.textContent = captionText || '';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
     document.querySelectorAll('.gallery-item').forEach(item => {
         item.addEventListener('click', () => {
-            item.style.zIndex = '10';
-            item.style.transform = 'scale(1.04)';
-            item.style.transition = 'transform 0.3s ease';
-
-            setTimeout(() => {
-                item.style.transform = '';
-                item.style.zIndex = '';
-            }, 500);
+            const img = item.querySelector('img');
+            const caption = item.querySelector('.gallery-hover span')?.textContent;
+            if (img) openLightbox(img.src, caption);
         });
+    });
+
+    if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+    if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+            closeLightbox();
+        }
     });
 
     // ---------- Lazy load images below the fold ----------

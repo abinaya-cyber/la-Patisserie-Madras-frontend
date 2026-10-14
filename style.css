@@ -358,6 +358,20 @@ button {
     align-items: center;
     gap: 0;
     z-index: 1001;
+    text-decoration: none;
+}
+
+.nav-logo-img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.35s var(--ease-out-expo), filter 0.35s ease;
+}
+
+.nav-logo:hover .nav-logo-img {
+    transform: scale(1.03);
+    filter: drop-shadow(0 2px 10px rgba(201, 169, 110, 0.35));
 }
 
 /* evil-eye removed */
@@ -553,6 +567,20 @@ button {
     font-family: var(--ff-heading);
     color: #fff;
     margin-bottom: 28px;
+}
+
+.hero-welcome {
+    display: block;
+    font-family: var(--ff-heading);
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+    font-weight: 400;
+    color: var(--gold-light);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroLineReveal 1.2s var(--ease-cinematic) 0.6s forwards;
 }
 
 .hero-line {
@@ -1285,6 +1313,17 @@ button {
     line-height: 1.65;
 }
 
+.contact-item p a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+.contact-item p a:hover {
+    color: var(--burgundy);
+    text-decoration: underline;
+}
+
 .social-links {
     display: flex;
     gap: 12px;
@@ -1530,21 +1569,41 @@ button {
 }
 
 @media (max-width: 768px) {
+    :root {
+        --section-padding: 64px;
+    }
+
+    /* Prevent mobile overflow */
+    html, body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    #navbar {
+        padding: 12px 0;
+    }
+
+    .nav-container {
+        padding: 0 18px;
+    }
+
     .nav-links {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
-        max-width: 340px;
+        width: 82%;
+        max-width: 320px;
         height: 100vh;
-        background: rgba(26, 23, 20, 0.97);
-        backdrop-filter: blur(24px);
+        height: 100dvh;
+        background: rgba(26, 23, 20, 0.98);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
         flex-direction: column;
         justify-content: center;
-        gap: 4px;
-        padding: 40px 32px;
-        transition: right 0.5s var(--ease-out-expo);
-        box-shadow: -8px 0 40px rgba(0, 0, 0, 0.3);
+        gap: 6px;
+        padding: 40px 24px;
+        transition: right 0.45s var(--ease-out-expo);
+        box-shadow: -10px 0 50px rgba(0, 0, 0, 0.4);
     }
 
     .nav-links.open {
@@ -1552,10 +1611,15 @@ button {
     }
 
     .nav-link {
-        font-size: 1.05rem;
+        font-size: 1.1rem;
         padding: 14px 20px;
         width: 100%;
         text-align: center;
+        border-radius: var(--radius-md);
+    }
+
+    .nav-link:active {
+        background: rgba(201, 169, 110, 0.15);
     }
 
     .nav-link::after {
@@ -1566,59 +1630,126 @@ button {
         display: none;
     }
 
+    .nav-logo-img {
+        height: 36px;
+    }
+
     .hamburger {
         display: flex;
+        padding: 10px;
+        margin-right: -6px;
+        cursor: pointer;
     }
 
     .hero-content {
-        padding: 100px 24px 80px;
+        padding: clamp(85px, 16vw, 120px) 18px 50px;
+    }
+
+    .hero-welcome {
+        font-size: clamp(0.95rem, 3.2vw, 1.25rem);
+        margin-bottom: 6px;
     }
 
     .hero-line {
+        font-size: clamp(2.2rem, 8.5vw, 3.5rem);
+        line-height: 1.1;
         letter-spacing: -0.5px;
     }
 
+    .hero-line.script {
+        font-size: clamp(2.2rem, 8vw, 3.2rem);
+        margin-top: 4px;
+    }
+
+    .hero-subtitle {
+        font-size: 0.94rem;
+        line-height: 1.65;
+        margin: 0 auto 30px;
+        padding: 0 4px;
+    }
+
     .hero-actions {
-        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 320px;
+        margin: 0 auto;
+        gap: 12px;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+        min-height: 48px;
+        padding: 14px 24px;
+        justify-content: center;
     }
 
     .about-grid {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 36px;
     }
 
     .about-img-accent {
-        right: 10px;
-        bottom: -20px;
-        width: 150px;
-        height: 150px;
+        right: 0;
+        bottom: -15px;
+        width: 130px;
+        height: 130px;
+        border-width: 4px;
+    }
+
+    .about-features {
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
 
     .specialties-grid {
         grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .specialty-card {
+        transform: none !important; /* Disable 3D tilt on mobile for smooth scrolling */
     }
 
     .gallery-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: 10px;
     }
 
-    .gi-1 { grid-column: span 2; height: 220px; }
-    .gi-4 { grid-column: span 2; height: 220px; }
-    .gi-2, .gi-3, .gi-5, .gi-6 { height: 190px; }
+    .gi-1 { grid-column: span 2; height: 210px; }
+    .gi-4 { grid-column: span 2; height: 210px; }
+    .gi-2, .gi-3, .gi-5, .gi-6 { height: 180px; }
 
     .testimonial-card {
         flex: 0 0 100%;
+        padding: 26px 20px;
     }
 
     .contact-grid {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 32px;
+    }
+
+    .contact-form-wrapper {
+        padding: 24px 18px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    /* Prevent iOS Safari auto-zoom on inputs */
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 16px !important;
+        min-height: 48px;
+        border-radius: 10px;
     }
 
     .footer-grid {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 28px;
     }
 
     .footer-bottom .section-container {
@@ -1628,20 +1759,21 @@ button {
     }
 
     .scroll-indicator {
-        bottom: 24px;
+        display: none; /* Hide scroll indicator on mobile to save viewport space */
     }
 }
 
 @media (max-width: 480px) {
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
+    .nav-logo-img {
+        height: 33px;
     }
 
-    .hero-actions .btn {
-        width: 100%;
-        max-width: 300px;
-        justify-content: center;
+    .hero-line {
+        font-size: clamp(1.95rem, 8vw, 2.5rem);
+    }
+
+    .hero-line.script {
+        font-size: clamp(1.95rem, 7.5vw, 2.4rem);
     }
 
     .gallery-grid {
@@ -1649,14 +1781,278 @@ button {
         gap: 10px;
     }
 
-    .gi-1, .gi-4 { grid-column: span 1; height: 220px; }
-    .gi-2, .gi-3, .gi-5, .gi-6 { height: 220px; }
+    .gi-1, .gi-4 { grid-column: span 1; height: 210px; }
+    .gi-2, .gi-3, .gi-5, .gi-6 { height: 210px; }
 
-    .form-row {
-        grid-template-columns: 1fr;
+    .social-link {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* ============================================
+   UI / UX ENHANCEMENTS
+   ============================================ */
+
+/* 1. Scroll Reading Progress Bar */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gold), var(--burgundy), var(--gold-light));
+    z-index: 10005;
+    transition: width 0.08s ease-out;
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.6);
+}
+
+/* 2. Floating WhatsApp Quick Action Button */
+.whatsapp-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: #fff;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 28px rgba(37, 211, 102, 0.38);
+    z-index: 9990;
+    transition: all 0.35s var(--ease-out-expo);
+    text-decoration: none;
+}
+
+.whatsapp-float:hover {
+    transform: translateY(-4px) scale(1.06);
+    box-shadow: 0 12px 36px rgba(37, 211, 102, 0.52);
+    color: #fff;
+}
+
+.whatsapp-badge {
+    position: absolute;
+    right: 66px;
+    background: rgba(26, 23, 20, 0.92);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: all 0.3s var(--ease-out-expo);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(201, 169, 110, 0.3);
+}
+
+.whatsapp-float:hover .whatsapp-badge {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 3. Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 92px;
+    right: 32px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(26, 23, 20, 0.85);
+    color: var(--gold);
+    border: 1px solid rgba(201, 169, 110, 0.35);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(14px);
+    transition: all 0.35s var(--ease-out-expo);
+    z-index: 9989;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background: var(--gold);
+    color: var(--charcoal);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(201, 169, 110, 0.4);
+}
+
+/* 4. Luxury Image Lightbox */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(14, 12, 10, 0.90);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+    cursor: zoom-out;
+}
+
+.lightbox.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-content {
+    max-width: 900px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.92);
+    transition: transform 0.4s var(--ease-out-expo);
+    cursor: default;
+}
+
+.lightbox.active .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    object-fit: contain;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lightbox-caption {
+    margin-top: 16px;
+    font-family: var(--ff-heading);
+    font-size: 1.15rem;
+    color: var(--gold-light);
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    font-size: 2.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.lightbox-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.18);
+    transform: scale(1.1);
+}
+
+/* 5. Form Actions & WhatsApp Button */
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+.btn-whatsapp {
+    background: linear-gradient(135deg, #1f9d55, #128C7E);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(31, 157, 85, 0.25);
+}
+
+.btn-whatsapp:hover {
+    background: linear-gradient(135deg, #25D366, #149d8c);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(37, 211, 102, 0.4);
+}
+
+/* 6. Form Highlight Animation */
+.form-highlight {
+    animation: formGlow 1.6s ease-out;
+}
+
+@keyframes formGlow {
+    0% { box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.9), 0 10px 40px rgba(107, 39, 55, 0.25); }
+    100% { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06); }
+}
+
+/* 7. Gallery Cursor Hint */
+.gallery-item {
+    cursor: zoom-in;
+}
+
+/* 8. Refined Product Card Button */
+.card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+.card-btn:hover {
+    gap: 10px;
+}
+
+/* Mobile Optimization for Floating Buttons & Lightbox */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        bottom: 18px;
+        right: 18px;
+        width: 50px;
+        height: 50px;
     }
 
-    .contact-form-wrapper {
-        padding: 28px 20px;
+    .whatsapp-badge {
+        display: none !important;
+    }
+
+    .back-to-top {
+        bottom: 76px;
+        right: 22px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .lightbox {
+        padding: 16px;
+    }
+
+    .lightbox-content img {
+        max-height: 70vh;
+        border-radius: 8px;
+    }
+
+    .lightbox-close {
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+        font-size: 1.8rem;
     }
 }
